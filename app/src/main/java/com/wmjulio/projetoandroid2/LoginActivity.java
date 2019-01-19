@@ -77,6 +77,8 @@ public class LoginActivity extends AppCompatActivity {
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
+                Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
+                e.printStackTrace();
                 updateUI(null);
             }
         }
@@ -87,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
             // Signed in successfully, show authenticated UI.
-            updateUI(account);
+            firebaseAuthWithGoogle(account);
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
@@ -119,7 +121,12 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    private void updateUI(Object o) {
+    private void updateUI(FirebaseUser user) {
+        if (null == user) {
+            Toast.makeText(LoginActivity.this, "Authentication Failed.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        Log.d(TAG, "signInWithCredential:Usuario"+user.getDisplayName());
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         LoginActivity.this.startActivity(intent);
     }

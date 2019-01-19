@@ -10,9 +10,12 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -36,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseFirestore firestoreDB;
     private ListenerRegistration firestoreListener;
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +55,12 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.rvObjList);
         firestoreDB = FirebaseFirestore.getInstance();
+
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+
+        TextView userName = findViewById(R.id.userName);
+        userName.setText(user.getDisplayName());
 
         loadObjList();
 
